@@ -216,11 +216,14 @@ int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spal
     }
 }
 
+
+
 void set_board_element(int uebergebenesBoard[9][9])
 {   
     int zeile, spalte, wert; // Variablen deklariert
     char ende;
 
+    Start:
     // Eingabe Zeile
     while(1)
     {
@@ -259,6 +262,21 @@ void set_board_element(int uebergebenesBoard[9][9])
         }
     }
 
+    while(1)
+    {
+        if(uebergebenesBoard[zeile - 1][spalte - 1] == 0)
+        {
+           break; 
+        }
+        else
+        {
+            printf("Diese Position ist bereits besetzt. Bitte wählen Sie eine andere Position.");
+            while (getchar() != '\n');
+            goto Start; //springt wieder zum Anfang der Funktion
+        }
+    }
+
+
     // Eingabe Zahl
     while(1)
     {
@@ -276,7 +294,8 @@ void set_board_element(int uebergebenesBoard[9][9])
             while (getchar() != '\n'); // Entfernt restliche Zeichen aus dem Puffer
         }
     }
-    
+
+ 
     int wahrheitswert = check_double_zeilen_spalten(uebergebenesBoard, zeile, spalte, wert) + check_double_felder(uebergebenesBoard, zeile, spalte, wert);
 
     if (wahrheitswert == 2)

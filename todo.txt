@@ -1,5 +1,5 @@
 prüfen ob das Kästchen bereits belegt ist, bevor überhaupt geprüft wird.
-Menue, in main.
+Menue, in main. (fertig)
 Dateiarbeit , in neue C Datei.
 wenn ich einen Wert eingegeben habe und die Prüfung eflogreich war 
 
