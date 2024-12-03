@@ -78,7 +78,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_1[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1, j + 1);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -89,7 +89,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_2[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1, j + 1 + 3);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -99,7 +99,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_3[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1, j + 1 + 6);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -110,7 +110,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_4[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1 + 3, j + 1);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -120,7 +120,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_5[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1 + 3, j + 1 + 3);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -130,7 +130,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_6[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1 + 3, j + 1 + 6);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -140,7 +140,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_7[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1 + 6, j + 1);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -150,7 +150,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_8[i][j] == wert)
                 {
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1 + 6, j + 1 + 3);
-                    return 0;
+                    return 1;
                 } 
             }
 
@@ -160,13 +160,13 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
                 if(feld_9[i][j] == wert)
                 { 
                     printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1 + 6, j + 1 + 6);
-                    return 0;
+                    return 1;
                 } 
             }
 
             if (i == 2 && j == 2)
             {
-                return 1;
+                return 0;
             }
             
         }
@@ -202,21 +202,34 @@ int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spal
         if (zeilen_elemente[i] == wert)
         {
             printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, zeile, i + 1);
-            return 0;
+            return 1;
         }
         if (spalten_elemente[i] == wert)
         {
             printf("Die Zahl %d ist bereits in Zeile %d und Spalte %d vorhanden.\n", wert, i + 1, spalte);
-            return 0;
+            return 1;
         }
         if (i == 8) // Erst wenn alle Zahlen in Spalten und Zeile geprüft wurden
         {
-            return 1;
+            return 0;
         }
     }
 }
 
-
+int check_if_occupied(int uebergebenesBoard[9][9], int zeile, int spalte)
+{
+     
+    if(uebergebenesBoard[zeile - 1][spalte - 1] == 0)
+    {
+        return 0; 
+    }
+    else
+    {
+        printf("Diese Position ist bereits besetzt. Bitte wählen Sie eine andere Position.\n");
+        return 1;
+    }
+    
+}
 
 void set_board_element(int uebergebenesBoard[9][9])
 {   
@@ -262,21 +275,11 @@ void set_board_element(int uebergebenesBoard[9][9])
         }
     }
 
-    while(1)
+    if (check_if_occupied(uebergebenesBoard, zeile, spalte) == 1)
     {
-        if(uebergebenesBoard[zeile - 1][spalte - 1] == 0)
-        {
-           break; 
-        }
-        else
-        {
-            printf("Diese Position ist bereits besetzt. Bitte wählen Sie eine andere Position.");
-            while (getchar() != '\n');
-            goto Start; //springt wieder zum Anfang der Funktion
-        }
+        goto Start;
     }
-
-
+   
     // Eingabe Zahl
     while(1)
     {
@@ -297,8 +300,9 @@ void set_board_element(int uebergebenesBoard[9][9])
 
  
     int wahrheitswert = check_double_zeilen_spalten(uebergebenesBoard, zeile, spalte, wert) + check_double_felder(uebergebenesBoard, zeile, spalte, wert);
+  
 
-    if (wahrheitswert == 2)
+    if (wahrheitswert == 0)
     {
         uebergebenesBoard[zeile - 1][spalte - 1] = wert; // Setzt die Zahl in das Board
     }
@@ -308,3 +312,45 @@ void set_board_element(int uebergebenesBoard[9][9])
 
 }
 
+int solve(int uebergebenesBoard[9][9])
+{   
+    int zeile = 0; 
+    int spalte = 0;
+    int wert = 1;
+
+
+    while(1)
+    {
+        if(check_if_occupied(uebergebenesBoard, zeile, spalte) == 0) //Feld ist frei
+        {
+            uebergebenesBoard[zeile][spalte] = wert;
+            if(check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 1 || check_double_zeilen_spalten(uebergebenesBoard, zeile, spalte, wert) == 1) //Zahl ist bereits vorhanden
+            {
+                wert++;
+            }
+            else //Zahl ist noch nicht vorhanden
+            {
+                spalte++;
+                wert = 1;
+            }
+
+        }
+        else // Feld ist besetzt
+        {
+            spalte++;
+            wert = 1;
+        }
+
+        if(spalte == 9) //Ende der Zeile
+        {
+            zeile++;
+            spalte = 0;
+        }
+
+        if(zeile == 9) //Ende der Matrix
+        {
+            break;  
+        }
+
+    }
+}

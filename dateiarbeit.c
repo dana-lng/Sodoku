@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <ctype.h>
-#include "sudoku.h"
 
 void open_file(FILE **datei, char *dateiname) 
 {
@@ -57,6 +56,7 @@ void close_file(FILE *datei, char *dateiname)
     
 }
 
+/*
 int main()
 {
     FILE *fp;
@@ -80,3 +80,4 @@ int main()
 
     
 }
+*/
