@@ -25,7 +25,7 @@ int main()
     while(running)
     {
         printf("Menue:\n");
-        printf(" 1 - Spiel laden\n 2 - Spiel anzeigen\n 3 - Spiel speichern\n 4 - Spiel beenden\n 5 - Datei laden\n 6 - löse Sudoku\n");
+        printf(" 1 - Spiel laden\n 2 - Spiel anzeigen\n 3 - Spiel speichern\n 4 - Spiel beenden\n 5 - Datei laden\n 6 - löse Sudoku\n 7 - Undo\n");
 
         if (scanf("%d", &e) != 1) // Prüft ob die Eingabe eine Zahl ist oder ein Buchstabe
         {
@@ -70,7 +70,12 @@ int main()
             solve(board, 0, 0);
             system("cls");
             printBoard(board);
-            break;  
+            break; 
+        case 7:
+            undo(board);
+            printBoard(board);
+            break;
+
 
         default:
             printf("Falsche Eingabe, versuchen Sie es erneut!\n");
@@ -84,28 +89,5 @@ int main()
 }
 
        
-
-
-    /*    
-    int board[9][9]; 
-    erstelleNullBoard(board);       //board = {{0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0},
-                                    //        {0, 0, 0, 0, 0, 0, 0, 0, 0}};
-    
-    printBoard(board);
-    
-
-
-    printBoard(board);
-
-    set_board_element(board); 
-    printBoard(board);
-*/
 
 

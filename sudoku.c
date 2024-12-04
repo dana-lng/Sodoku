@@ -107,6 +107,7 @@ void set_board_element(int uebergebenesBoard[9][9])
     int zeile, spalte, wert; // Variablen deklariert
     char ende;
 
+    
     Start:
     // Eingabe Zeile
     while(1)
@@ -175,6 +176,7 @@ void set_board_element(int uebergebenesBoard[9][9])
 
     if (wahrheitswert == 0)
     {
+        saveBoardState(uebergebenesBoard);
         uebergebenesBoard[zeile - 1][spalte - 1] = wert; // Setzt die Zahl in das Board
     }
 
@@ -185,26 +187,28 @@ void set_board_element(int uebergebenesBoard[9][9])
 
 int solve(int uebergebenesBoard[9][9], int zeile, int spalte) 
 {   
-   int wert;
+    
+    int wert;
 
-   if(zeile == 9)
-   {
+    if(zeile == 9)
+    {
         return 1;
-   }
-   else if(spalte == 9)
-   {
+    }
+    else if(spalte == 9)
+    {
         return solve(uebergebenesBoard, zeile + 1, 0);
-   }
-   else if (uebergebenesBoard[zeile][spalte] != 0)
-   {
+    }
+    else if (uebergebenesBoard[zeile][spalte] != 0)
+    {
         return solve(uebergebenesBoard, zeile, spalte + 1);
-   }
-   else
-   {
+    }
+    else
+    {
         for(wert = 1; wert < 10; wert++)
         {
             if(check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 && check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0)
             {
+                saveBoardState(uebergebenesBoard);
                 uebergebenesBoard[zeile][spalte] = wert;
                 if(solve(uebergebenesBoard, zeile, spalte + 1) == 1)
                 {
@@ -216,6 +220,53 @@ int solve(int uebergebenesBoard[9][9], int zeile, int spalte)
         }
 
         return 0;
-   }
+    }
    
+}
+
+
+#define MAX_UNDO 100 // Maximale Anzahl der Zustände, die gespeichert werden können
+
+typedef struct {
+    int board[9][9]; // Zustand des Sudoku-Boards
+} BoardState;
+
+BoardState undoStack[MAX_UNDO]; // Stack zur Speicherung von Zuständen
+int undoIndex = -1; // Last-in-first-out, Zeiger auf die aktuelle Position im Stack
+
+void saveBoardState(int uebergebenesBoard[9][9]) {
+    if (undoIndex < MAX_UNDO - 1) 
+    {
+        undoIndex++;
+        for (int i = 0; i < 9; i++) 
+        {
+            for (int j = 0; j < 9; j++) 
+            {
+                undoStack[undoIndex].board[i][j] = uebergebenesBoard[i][j];
+            }
+        }
+    } 
+    else 
+    {
+        printf("Undo-Speicher ist voll!\n");
+    }
+}
+
+
+void undo(int uebergebenesBoard[9][9]) {
+    if (undoIndex >= 0) // Wenn gespeicherte Zustände vorhanden, bei undoIndex = -1 keine Speicherzustände vorhanden
+    {
+        for (int i = 0; i < 9; i++) 
+        {
+            for (int j = 0; j < 9; j++) 
+            {
+                uebergebenesBoard[i][j] = undoStack[undoIndex].board[i][j];
+            }
+        }
+        undoIndex--; // Zum vorherigen Zustand wechseln
+    } 
+    else 
+    {
+        printf("Keine weiteren Undo-Schritte verfügbar!\n");
+    }
 }
