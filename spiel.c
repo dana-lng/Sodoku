@@ -67,7 +67,8 @@ int main()
             close_file(fp, dateiname);
             break;
         case 6:
-            solve(board);
+            solve(board, 0, 0);
+            system("cls");
             printBoard(board);
             break;  
 
