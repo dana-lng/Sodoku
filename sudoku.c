@@ -28,7 +28,7 @@ void printBoard(int uebergebenesBoard[9][9])
                 printf("| ");
             }
 
-            printf("%d ", uebergebenesBoard[i][j]); // Drucke das aktuelle Board-Element
+            printf("%d ", uebergebenesBoard[i][j]); // Druckt das aktuelle Board-Element
 
             // Am Ende der Zeile (bei der 9. Spalte): abschließendes '|'
             if (j == 8)
@@ -36,38 +36,42 @@ void printBoard(int uebergebenesBoard[9][9])
                 printf("|");
             }
         }
-        printf("\n"); // Zeilenumbruch am Ende jeder Zeile
+        printf("\n"); 
     }
 
-    // Abschließende Trennlinie nach dem letzten Block
     printf("+-------+-------+-------+\n");
 }
 
 int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
 {
-    int feld_start_zeile = (zeile / 3) * 3;
-    int feld_start_spalte = (spalte / 3) * 3;
+    // Durch Division der Zeile und Spalte durch 3 und Multiplikation mit 3 wird die obere linke Ecke des Blocks ermittelt.
+    int feld_start_zeile = (zeile / 3) * 3; 
+    int feld_start_spalte = (spalte / 3) * 3; 
 
-    for(int i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++) // Iteriert über die 3 Zeilen des Blocks
     {
-        for(int j = 0; j < 3; j++)
+        for (int j = 0; j < 3; j++) // Iteriert über die 3 Spalten des Blocks
         {
-            if(uebergebenesBoard[feld_start_zeile + i][feld_start_spalte + j] == wert)
+           
+            if (uebergebenesBoard[feld_start_zeile + i][feld_start_spalte + j] == wert)  // Prüft, ob die Zahl `wert` bereits in einer der Zellen des Blocks vorhanden ist
             {
+              
                 printf("Die Zahl %d ist bereits in diesem Feldblock vorhanden.\n", wert);
-                return 1;
+                return 1; 
             }
         }
     }
-    return 0;
-   
+
+    // Wenn die Zahl in keinem der Felder gefunden wurde, ist sie zulässig
+    return 0; 
 }
+
 
 int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
 {
     int i; 
 
-    // Prüfen ob im Array zeilen_elemente die Zahl vorkommt  
+    // Prüft ob im Array zeilen_elemente die Zahl vorkommt  
     // oder ob im Array spalten_elemente die Zahl vorkommt
     for (i = 0; i < 9; i++)
     {   
@@ -89,7 +93,7 @@ int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spal
 
 int check_if_occupied(int uebergebenesBoard[9][9], int zeile, int spalte)
 {
-     
+     // Prüft ob die Position bereits belegt ist
     if(uebergebenesBoard[zeile - 1][spalte - 1] == 0)
     {
         return 0; 
@@ -104,7 +108,7 @@ int check_if_occupied(int uebergebenesBoard[9][9], int zeile, int spalte)
 
 void set_board_element(int uebergebenesBoard[9][9])
 {   
-    int zeile, spalte, wert; // Variablen deklariert
+    int zeile, spalte, wert; 
     char ende;
 
     
@@ -116,9 +120,8 @@ void set_board_element(int uebergebenesBoard[9][9])
          
         if (scanf("%d%c", &zeile, &ende) == 2 && // Prüft ob Buchstabe oder nicht,
            (ende == '\n' || ende == ' ') && // &ende prüft ob ganze Zahl oder nicht
-           (zeile >= 1 && zeile <= 9)) // Prüfe, ob die Zeile zwischen 1 und 9 liegt
+           (zeile >= 1 && zeile <= 9)) // Prüft, ob die Zeile zwischen 1 und 9 liegt
         {
-
             break;
         }
         else 
@@ -170,10 +173,10 @@ void set_board_element(int uebergebenesBoard[9][9])
         }
     }
 
- 
+    // Addiert alle return Werte der Funktionen
     int wahrheitswert = check_double_zeilen_spalten(uebergebenesBoard, zeile, spalte, wert) + check_double_felder(uebergebenesBoard, zeile, spalte, wert);
   
-
+    // wenn 0, dann ist die Eingabe gültig
     if (wahrheitswert == 0)
     {
         saveBoardState(uebergebenesBoard);
@@ -186,98 +189,105 @@ void set_board_element(int uebergebenesBoard[9][9])
 }
 
 int solve(int uebergebenesBoard[9][9], int zeile, int spalte) 
-{   
+{
+    int wert; 
     
-    int wert;
-
-    if(zeile == 9)
+    if (zeile == 9) // Wenn alle Zeilen abgearbeitet sind, ist das Sudoku vollständig gelöst
     {
-        return 1;
+        return 1; 
     }
-    else if(spalte == 9)
+    else if (spalte == 9)  // Wenn alle Spalten in der aktuellen Zeile abgearbeitet sind, springt zur nächsten Zeile
     {
-        return solve(uebergebenesBoard, zeile + 1, 0);
+        return solve(uebergebenesBoard, zeile + 1, 0); // Wechselt zur nächsten Zeile und starte bei Spalte 0
     }
-    else if (uebergebenesBoard[zeile][spalte] != 0)
+    else if (uebergebenesBoard[zeile][spalte] != 0)    // Wenn die aktuelle Zelle bereits einen festen Wert hat, wird übersprungen
     {
-        return solve(uebergebenesBoard, zeile, spalte + 1);
+        return solve(uebergebenesBoard, zeile, spalte + 1); 
     }
-    else
+    else 
     {
-        for(wert = 1; wert < 10; wert++)
+        for (wert = 1; wert < 10; wert++) //geht alle Werte von 1 bis 9 durch
         {
-            if(check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 && check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0)
+            if (check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 &&  // Prüft, ob der Wert in der aktuellen Zeile, Spalte oder dem 3x3-Block gültig ist
+                check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0) 
             {
-                saveBoardState(uebergebenesBoard);
-                uebergebenesBoard[zeile][spalte] = wert;
-                if(solve(uebergebenesBoard, zeile, spalte + 1) == 1)
+                saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
+                
+                uebergebenesBoard[zeile][spalte] = wert;  // Setzt den Wert in das Board
+
+                if (solve(uebergebenesBoard, zeile, spalte + 1) == 1) // Prüft, ob das Sudoku mit diesem Wert lösbar ist
                 {
-                    return 1;
+                    return 1; // Sudoku erfolgreich gelöst 
                 }
 
-                uebergebenesBoard[zeile][spalte] = 0;
+                uebergebenesBoard[zeile][spalte] = 0; // Rückgängigmachen der Änderung (Backtracking), wenn der aktuelle Wert nicht zur Lösung führt
             }
         }
 
         return 0;
     }
-   
 }
+
 
 void open_file(FILE **datei, char *dateiname) 
 {
-    if((*datei = fopen(dateiname, "rt")) == NULL)
+    // Versucht, die Datei im Lese-Modus ("rt" für Read Text) zu öffnen
+    
+    if ((*datei = fopen(dateiname, "rt")) == NULL) // Der Dateizeiger wird auf die Datei gesetzt, falls das Öffnen erfolgreich ist
     {
         printf("Datei %s konnte nicht geoeffnet werden\n", dateiname);
-
     }
-    else
+    else 
     {
-        printf("Datei %s konnte geoeffnet werden.", dateiname);
+        printf("Datei %s konnte geoeffnet werden.\n", dateiname);
     }
 }
+
 
 void load_file(FILE *datei, int uebergebenesBoard[9][9])
 {
     int k = 0;
-    int i;
-    int j;
-    int c;
-    int eingelesenes_sudokufeld_1d_array[81] = {};
+    int i, j, c;
+    int eingelesenes_sudokufeld_1d_array[81] = {}; // Array zur Speicherung der Sudoku-Zahlen als 1D-Array
 
-    while((c = fgetc(datei)) != EOF)
+   
+    while((c = fgetc(datei)) != EOF)  // Liest die Datei Zeichen für Zeichen, bis das Ende der Datei erreicht ist
     {
-        
-        if(isdigit(c))
+       
+        if(isdigit(c))  // Wenn das gelesene Zeichen eine Zahl ist
         {
-            eingelesenes_sudokufeld_1d_array[k] = c - '0'; //c wird in ascii code gelesen und - '0' wandelt in die jeweilige Zahl um
-            k++;
+            
+            eingelesenes_sudokufeld_1d_array[k] = c - '0'; // Umwandlung von ASCII-Zeichen in Integer (Ziffer) und Speicherung im 1D-Array
+            k++;  // Erhöht den Index für das nächste Feld
         }
     }
-    printf("\n");
 
-    for(i = 0; i < 9; i++) 
+    
+    for(i = 0; i < 9; i++) // Konvertiert das 1D-Array in ein 2D-Array (Sudoku-Board)
     {
-        for(j = 0; j < 9; j++)
+        for(j = 0; j < 9; j++) 
         {
-            uebergebenesBoard[i][j] = eingelesenes_sudokufeld_1d_array[i * 9 + j]; //umwandlung von 1d array in 2d array (matrix)
-        } 
-    }   
+            uebergebenesBoard[i][j] = eingelesenes_sudokufeld_1d_array[i * 9 + j]; 
+        }
+    }
 
+    printf("\n"); 
 }
+
 
 void close_file(FILE *datei, char *dateiname)
 {
-    if(fclose(datei) == 0)
+    
+    if(fclose(datei) == 0) // Versucht, die Datei zu schließen + Fehlermeldung ausgeben
     {
         printf("Datei %s geschlossen.\n", dateiname);
     }
-    else
+    else 
     {
         printf("Datei %s konnte nicht geschlossen werden.\n", dateiname);
     }
-    
 }
+
 
 
 
@@ -291,14 +301,17 @@ BoardState undoStack[MAX_UNDO]; // Stack zur Speicherung von Zuständen
 int undoIndex = -1; // Last-in-first-out, Zeiger auf die aktuelle Position im Stack
 
 void saveBoardState(int uebergebenesBoard[9][9]) {
-    if (undoIndex < MAX_UNDO - 1) 
+  
+    if (undoIndex < MAX_UNDO - 1)   // Überprüft, ob der Undo-Stack noch Platz hat (maximale Anzahl an Undo-Schritten ist MAX_UNDO)
     {
-        undoIndex++;
+        undoIndex++;  // Erhöht den Index für die nächste Speicherstelle im Undo-Stack
+        
+        // Kopiere das aktuelle Sudoku-Board in den Undo-Stack an der Position undoIndex
         for (int i = 0; i < 9; i++) 
         {
             for (int j = 0; j < 9; j++) 
             {
-                undoStack[undoIndex].board[i][j] = uebergebenesBoard[i][j];
+                undoStack[undoIndex].board[i][j] = uebergebenesBoard[i][j]; // Speichere jedes Feld des Boards
             }
         }
     } 
@@ -307,6 +320,7 @@ void saveBoardState(int uebergebenesBoard[9][9]) {
         printf("Undo-Speicher ist voll!\n");
     }
 }
+
 
 void undo(int uebergebenesBoard[9][9]) {
     if (undoIndex >= 0) // Wenn gespeicherte Zustände vorhanden, bei undoIndex = -1 keine Speicherzustände vorhanden
@@ -328,23 +342,36 @@ void undo(int uebergebenesBoard[9][9]) {
 
 int speichern(int uebergebenesBoard[9][9], char *dateiname) 
 {
-    int i, j;
-    FILE* fp;
+    FILE *fp; // Zeiger auf die Datei
+    int i, j; // Variablen für die Schleifen
 
-    if((fp = fopen(dateiname, "wt")) == 0)
+    // Datei zum Schreiben öffnen ("w" steht für Write-Modus) + Fehlermeldung ausgeben
+    if ((fp = fopen(dateiname, "w")) == NULL) 
     {
-        printf("Datei %s konnte nicht geoeffnet werden\n", dateiname);
-        return 0;
+        printf("Die Datei %s konnte nicht geöffnet werden.\n", dateiname);
+        return 1; 
     }
-    for (i = 0; i < 9; i++) 
+
+ 
+    for (i = 0; i < 9; i++) // Iteriert über alle Zeilen
     {
-        for (int j = 0; j < 9; j++) 
+        for (j = 0; j < 9; j++) // Iteriert über alle Spalten
         {
+            // Schreibt den aktuellen Wert ins File
             fprintf(fp, "%d ", uebergebenesBoard[i][j]);
         }
-    fprintf(fp, "\n");
+        fprintf(fp, "\n"); 
     }
 
-    fclose(fp);
-    return 1;
+    if (fclose(fp) == 0) 
+    {
+        printf("Die Datei %s wurde erfolgreich gespeichert.\n", dateiname);
+    } 
+    else 
+    {
+        printf("Die Datei %s konnte nicht geschlossen werden.\n", dateiname);
+        return 1; 
+    }
+
+    return 0; // Rückgabe von 0 signalisiert, dass alles erfolgreich war
 }
