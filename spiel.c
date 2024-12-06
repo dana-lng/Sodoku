@@ -1,20 +1,15 @@
 #include <stdio.h>
 #include "sudoku.c"
-#include "dateiarbeit.c"
 
 int main()
 {
     FILE *fp;
+    char easy[50] = "easy.txt";
+    char medium[50] = "medium.txt";
+    char hard[50] = "hard.txt";
+
     char dateiname[50] = "data.txt";
-    int board[9][9] = {{1, 2, 3, 4, 5, 6, 9, 8, 9}, //board = 9x9 Matrix
-                       {4, 5, 6, 7, 8, 9, 1, 2, 3},
-                       {7, 8, 9, 1, 2, 3, 4, 5, 6},
-                       {2, 3, 4, 5, 6, 7, 8, 9, 1},
-                       {5, 6, 7, 8, 9, 1, 2, 3, 4},
-                       {8, 9, 1, 2, 3, 4, 5, 6, 7},
-                       {3, 4, 5, 6, 7, 8, 9, 1, 2},
-                       {6, 7, 8, 9, 1, 2, 3, 4, 5},
-                       {0, 0, 0, 0, 0, 0, 0, 0, 0}}; 
+    int board[9][9];
     int e;
     int running = 1;
     int continuePlaying;
@@ -25,7 +20,7 @@ int main()
     while(running)
     {
         printf("Menue:\n");
-        printf(" 1 - Spiel laden\n 2 - Spiel anzeigen\n 3 - Spiel speichern\n 4 - Spiel beenden\n 5 - Datei laden\n 6 - löse Sudoku\n 7 - Undo\n");
+        printf(" 1 - Datei laden\n 2 - Spiel anzeigen\n 3 - Spiel spielen\n 4 - Rückgängig machen\n 5 - Spiel speichern \n 6 - löse Sudoku\n 7 - Beenden\n");
 
         if (scanf("%d", &e) != 1) // Prüft ob die Eingabe eine Zahl ist oder ein Buchstabe
         {
@@ -37,6 +32,43 @@ int main()
         switch (e)
         {
         case 1:
+            printf("Wählen Sie einen Schwierigkeitsgrad:\n");
+            printf(" 1 - Easy\n 2 - Medium\n 3 - Hard\n");
+            if (scanf("%d", &e) != 1) // Prüft ob die Eingabe eine Zahl ist oder ein Buchstabe
+            {
+                printf("Falsche Eingabe\n");
+                while (getchar() != '\n'); // Eingabepuffer leeren
+                continue; // Gehe zurück zum Menü
+            }
+            switch (e)
+            {
+                case 1:
+                    open_file(&fp, easy);
+                    load_file(fp, board);
+                    close_file(fp, easy);
+                    break;
+
+                case 2:
+                    open_file(&fp, medium);
+                    load_file(fp, board);
+                    close_file(fp, medium);
+                    break;
+
+                case 3:
+                    open_file(&fp, hard);
+                    load_file(fp, board);
+                    close_file(fp, hard);
+                    break;
+
+                break;
+            }
+
+           
+            
+        case 2:
+            printBoard(board);
+            break;
+        case 3: 
             while(1)
             {
                 printBoard(board);
@@ -53,29 +85,28 @@ int main()
                 }
             }
             break; 
-        case 2:
-            printBoard(board);
-            break;
-        case 3: break;
+        
         case 4:
-            running = 0;
-            break;
-        case 5: 
-            open_file(&fp, dateiname);
-            load_file(fp, board);
+            undo(board);
             printBoard(board);
-            close_file(fp, dateiname);
             break;
+
+            
+        case 5: 
+            printf("Bitte geben Sie einen Dateinamen ein: ");
+            scanf("%99s", dateiname);
+            speichern(board, dateiname);
+            break;
+            
         case 6:
             solve(board, 0, 0);
             system("cls");
             printBoard(board);
             break; 
-        case 7:
-            undo(board);
-            printBoard(board);
-            break;
 
+        case 7:
+            running = 0;
+            break;
 
         default:
             printf("Falsche Eingabe, versuchen Sie es erneut!\n");

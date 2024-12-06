@@ -224,10 +224,66 @@ int solve(int uebergebenesBoard[9][9], int zeile, int spalte)
    
 }
 
+void open_file(FILE **datei, char *dateiname) 
+{
+    if((*datei = fopen(dateiname, "rt")) == NULL)
+    {
+        printf("Datei %s konnte nicht geoeffnet werden\n", dateiname);
+
+    }
+    else
+    {
+        printf("Datei %s konnte geoeffnet werden.", dateiname);
+    }
+}
+
+void load_file(FILE *datei, int uebergebenesBoard[9][9])
+{
+    int k = 0;
+    int i;
+    int j;
+    int c;
+    int eingelesenes_sudokufeld_1d_array[81] = {};
+
+    while((c = fgetc(datei)) != EOF)
+    {
+        
+        if(isdigit(c))
+        {
+            eingelesenes_sudokufeld_1d_array[k] = c - '0'; //c wird in ascii code gelesen und - '0' wandelt in die jeweilige Zahl um
+            k++;
+        }
+    }
+    printf("\n");
+
+    for(i = 0; i < 9; i++) 
+    {
+        for(j = 0; j < 9; j++)
+        {
+            uebergebenesBoard[i][j] = eingelesenes_sudokufeld_1d_array[i * 9 + j]; //umwandlung von 1d array in 2d array (matrix)
+        } 
+    }   
+
+}
+
+void close_file(FILE *datei, char *dateiname)
+{
+    if(fclose(datei) == 0)
+    {
+        printf("Datei %s geschlossen.\n", dateiname);
+    }
+    else
+    {
+        printf("Datei %s konnte nicht geschlossen werden.\n", dateiname);
+    }
+    
+}
+
+
 
 #define MAX_UNDO 100 // Maximale Anzahl der Zustände, die gespeichert werden können
-
-typedef struct {
+typedef struct 
+{
     int board[9][9]; // Zustand des Sudoku-Boards
 } BoardState;
 
@@ -252,7 +308,6 @@ void saveBoardState(int uebergebenesBoard[9][9]) {
     }
 }
 
-
 void undo(int uebergebenesBoard[9][9]) {
     if (undoIndex >= 0) // Wenn gespeicherte Zustände vorhanden, bei undoIndex = -1 keine Speicherzustände vorhanden
     {
@@ -269,4 +324,27 @@ void undo(int uebergebenesBoard[9][9]) {
     {
         printf("Keine weiteren Undo-Schritte verfügbar!\n");
     }
+}
+
+int speichern(int uebergebenesBoard[9][9], char *dateiname) 
+{
+    int i, j;
+    FILE* fp;
+
+    if((fp = fopen(dateiname, "wt")) == 0)
+    {
+        printf("Datei %s konnte nicht geoeffnet werden\n", dateiname);
+        return 0;
+    }
+    for (i = 0; i < 9; i++) 
+    {
+        for (int j = 0; j < 9; j++) 
+        {
+            fprintf(fp, "%d ", uebergebenesBoard[i][j]);
+        }
+    fprintf(fp, "\n");
+    }
+
+    fclose(fp);
+    return 1;
 }

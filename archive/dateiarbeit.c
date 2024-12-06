@@ -56,28 +56,3 @@ void close_file(FILE *datei, char *dateiname)
     
 }
 
-/*
-int main()
-{
-    FILE *fp;
-    char dateiname[50] = "data.txt";
-    int board[9][9] = {{1, 2, 3, 4, 5, 6, 9, 8, 9}, //board = 9x9 Matrix
-                       {4, 5, 6, 7, 8, 9, 1, 2, 3},
-                       {7, 8, 9, 1, 2, 3, 4, 5, 6},
-                       {2, 3, 4, 5, 6, 7, 8, 9, 1},
-                       {5, 6, 7, 8, 9, 1, 2, 3, 4},
-                       {8, 9, 1, 2, 3, 4, 5, 6, 7},
-                       {3, 4, 5, 6, 7, 8, 9, 1, 2},
-                       {6, 7, 8, 9, 1, 2, 3, 4, 5},
-                       {0, 0, 0, 0, 0, 0, 0, 0, 0}}; 
-
-    printBoard(board);
-    open_file(&fp, dateiname);
-    load_file(fp, board);
-    printBoard(board);
-    close_file(fp, dateiname);
-
-
-    
-}
-*/
