@@ -1,16 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include "sudoku.c" // Enthält Funktionen für das Laden, Speichern und Bearbeiten des Sudoku-Boards
 
 int main()
 {
     // Umlaute und Sonderzeichen in der Konsole anzeigen
     system("chcp 65001 > NUL");
-
     // Dateizeiger und Dateinamen für verschiedene Schwierigkeitsgrade definieren
     FILE *fp;
     char easy[50] = "easy.txt";   // Datei für einfaches Sudoku
     char medium[50] = "medium.txt"; // Datei für mittleres Sudoku
     char hard[50] = "hard.txt";   // Datei für schweres Sudoku
+    char zufall[50] = "zufall.txt";
 
     char dateiname[50] = "data.txt"; 
     int board[9][9];                
@@ -44,7 +46,7 @@ int main()
         case 1:
           
             printf("Wählen Sie einen Schwierigkeitsgrad:\n");
-            printf(" 1 - Easy\n 2 - Medium\n 3 - Hard\n");
+            printf(" 1 - Easy\n 2 - Medium\n 3 - Hard\n 4 - Zufall\n");
 
             if (scanf("%d", &e) != 1) // Überprüft, ob die Eingabe eine Zahl ist
             {
@@ -60,21 +62,30 @@ int main()
                     open_file(&fp, easy); // Datei öffnen
                     load_file(fp, board); // Daten in das Board laden
                     close_file(fp, easy); // Datei schließen
+                    printBoard(board);
                     break;
 
                 case 2:
                     open_file(&fp, medium);
                     load_file(fp, board);
                     close_file(fp, medium);
+                    printBoard(board);
                     break;
 
                 case 3:
                     open_file(&fp, hard);
                     load_file(fp, board);
                     close_file(fp, hard);
+                    printBoard(board);
                     break;
 
-                break;
+                case 4:
+                    random_board(board);
+                    speichern(board, zufall);
+                    open_file(&fp, zufall);
+                    load_file(fp, board);
+                    close_file(fp, zufall);
+                    break;
             }
             break;
 
