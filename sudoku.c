@@ -303,7 +303,6 @@ void load_file(FILE *datei, int uebergebenesBoard[9][9])
         }
     }
 
-    printf("\n"); 
 }
 
 void close_file(FILE *datei, char *dateiname)
@@ -311,11 +310,11 @@ void close_file(FILE *datei, char *dateiname)
     
     if(fclose(datei) == 0) // Versucht, die Datei zu schließen + Fehlermeldung ausgeben
     {
-        printf("Datei %s geschlossen.\n", dateiname);
+        printf("Datei %s geschlossen.\n\n", dateiname);
     }
     else 
     {
-        printf("Datei %s konnte nicht geschlossen werden.\n", dateiname);
+        printf("Datei %s konnte nicht geschlossen werden.\n\n", dateiname);
     }
 }
 

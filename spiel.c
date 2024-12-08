@@ -114,6 +114,7 @@ int main()
                 if (continuePlaying != 1) 
                 {
                     while (getchar() != '\n'); // Eingabepuffer leeren
+                    printBoard(board);
                     break; // Schleife verlassen
                 }
             }

@@ -2,7 +2,8 @@
 #include <time.h>
 #include <stdlib.h>
 
-void erstelleNullBoard(int uebergebenesBoard[9][9])
+
+void erstelle_NullBoard(int uebergebenesBoard[9][9])
 {
     for (int i = 0; i < 9; i++) // Schleife über alle Zeilen
     {
@@ -13,7 +14,7 @@ void erstelleNullBoard(int uebergebenesBoard[9][9])
     }
 }
 
-void printBoard(int uebergebenesBoard[9][9])
+void print_Board(int uebergebenesBoard[9][9])
 {
     for (int i = 0; i < 9; i++) // Schleife über die Zeilen
     {
@@ -67,7 +68,7 @@ void print_zahlen(int zahlen[9])
     }
 }
 
-int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
+int check_double_felder2(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
 {
     // Durch Division der Zeile und Spalte durch 3 und Multiplikation mit 3 wird die obere linke Ecke des Blocks ermittelt.
     int feld_start_zeile = (zeile / 3) * 3; 
@@ -91,7 +92,7 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
     return 0; 
 }
 
-int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
+int check_double_zeilen_spalten2(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
 {
     int i; 
 
@@ -115,7 +116,7 @@ int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spal
     return 0; 
 }
 
-int solve(int uebergebenesBoard[9][9], int zeile, int spalte) 
+int solve2(int uebergebenesBoard[9][9], int zeile, int spalte) 
 {
     int wert; 
     
@@ -240,7 +241,7 @@ int create_random_sudoku(int uebergebenesBoard[9][9])
             k--;
         } 
     }
-    printf("Ein zufälliges Sudoku Board mit %d freien Feldern\n", k);
+    printf("Ein zufälliges Sudoku Board mit %d freien Feldern\n", 50);
     printBoard(uebergebenesBoard);
     return 0;
 }
