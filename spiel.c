@@ -7,7 +7,6 @@ int main()
 {
     // Umlaute und Sonderzeichen in der Konsole anzeigen
     system("chcp 65001 > NUL");
-    // Dateizeiger und Dateinamen für verschiedene Schwierigkeitsgrade definieren
     FILE *fp;
     char easy[50] = "easy.txt";   // Datei für einfaches Sudoku
     char medium[50] = "medium.txt"; // Datei für mittleres Sudoku
@@ -15,7 +14,8 @@ int main()
     char zufall[50] = "zufall.txt";
 
     char dateiname[50] = "data.txt"; 
-    int board[9][9];                
+    int board[9][9];   
+    int random_board[9][9];             
     int e;                           // Variable für Benutzereingabe im Menü
     int running = 1;                 // Kontrollvariable, um die Hauptschleife zu steuern
     int continuePlaying;             // Variable, um das Weiterspielen im Spielmodus zu steuern
@@ -23,15 +23,19 @@ int main()
 
     printf("WiLLKOMMEN ZUM SUDOKU\n");
     printf("-----------------------\n");
-         
+
+
+
     // Hauptschleife des Programms, die so lange läuft, bis der Benutzer das Spiel beendet
     while(running)
     {
     
+    
         printf("Menue:\n");
         printf(" 1 - Datei laden\n 2 - Spiel anzeigen\n 3 - Spiel spielen\n 4 - Rückgängig machen\n");
         printf(" 5 - Spiel speichern \n 6 - löse Sudoku\n 7 - Beenden\n");
-
+        
+    
       
         if (scanf("%d", &e) != 1) // Überprüft, ob die Eingabe eine gültige Zahl ist
         {
@@ -39,7 +43,6 @@ int main()
             while (getchar() != '\n'); // Eingabepuffer leeren
             continue; // Zurück zum Menü
         } 
-
     
         switch (e)
         {
@@ -80,20 +83,21 @@ int main()
                     break;
 
                 case 4:
-                    random_board(board);
-                    speichern(board, zufall);
+                    create_random_board(random_board);
+                    speichern(random_board, zufall);
                     open_file(&fp, zufall);
-                    load_file(fp, board);
-                    close_file(fp, zufall);
+                    load_file(fp, board);    
+                    close_file(fp, zufall);               
                     break;
             }
             break;
+          
 
         case 2:
             // Aktuelles Sudoku-Board anzeigen
             printBoard(board);
             break;
-
+ 
         case 3: 
             // Spielmodus: Benutzer bearbeitet das Board
             while(1)
@@ -113,27 +117,28 @@ int main()
                 }
             }
             break; 
-        
+         
         case 4:
             // Rückgängig machen: vorherigen Spielstand wiederherstellen
             undo(board);
             printBoard(board);
             break;
-
+ 
        case 5: 
             // Spielstand speichern
             printf("Bitte geben Sie einen Dateinamen ein: ");
-            scanf("%99s", dateiname); // Dateiname einlesen
-            speichern(board, dateiname); // Spielstand speichern
+            scanf("%99s", dateiname);// Dateiname einlesen
+            speichern(board, dateiname);   // Spielstand speichern
             break;
-            
+        
         case 6:
             // Sudoku automatisch lösen
+            
             solve(board, 0, 0); 
             system("cls"); // Konsole leeren
             printBoard(board); 
             break; 
-
+     
         case 7:
             // Programm beenden
             running = 0;
@@ -143,6 +148,10 @@ int main()
             // Falsche Eingabe, Hinweis ausgeben
             printf("Falsche Eingabe, versuchen Sie es erneut!\n");
             break;
+            
         }
+        
     }
+    
+   return 0;
 }

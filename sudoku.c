@@ -1,6 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <time.h>
+#include <stdbool.h>
+#define N 9 // Größe des Sudoku-Boards
+
+#define MAX_UNDO 1000 // Maximale Anzahl der Zustände, die gespeichert werden können
+typedef struct 
+{
+    int board[9][9]; // Zustand des Sudoku-Boards
+} BoardState;
+
+BoardState undoStack[MAX_UNDO]; // Stack zur Speicherung von Zuständen
+int undoIndex = -1; // Last-in-first-out, Zeiger auf die aktuelle Position im Stack
 
 void erstelleNullBoard(int uebergebenesBoard[9][9])
 {
@@ -10,6 +22,28 @@ void erstelleNullBoard(int uebergebenesBoard[9][9])
         {
             uebergebenesBoard[i][j] = 0; // Setze jedes Element des Boards auf 0
         }
+    }
+}
+
+void saveBoardState(int uebergebenesBoard[9][9]) 
+{
+  
+    if (undoIndex < MAX_UNDO - 1)   // Überprüft, ob der Undo-Stack noch Platz hat (maximale Anzahl an Undo-Schritten ist MAX_UNDO)
+    {
+        undoIndex++;  // Erhöht den Index für die nächste Speicherstelle im Undo-Stack
+        
+        // Kopiere das aktuelle Sudoku-Board in den Undo-Stack an der Position undoIndex
+        for (int i = 0; i < 9; i++) 
+        {
+            for (int j = 0; j < 9; j++) 
+            {
+                undoStack[undoIndex].board[i][j] = uebergebenesBoard[i][j]; // Speichere jedes Feld des Boards
+            }
+        }
+    } 
+    else 
+    {
+        printf("Undo-Speicher ist voll!\n");
     }
 }
 
@@ -67,7 +101,6 @@ int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int 
     // Wenn die Zahl in keinem der Felder gefunden wurde, ist sie zulässig
     return 0; 
 }
-
 
 int check_double_zeilen_spalten(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
 {
@@ -213,7 +246,7 @@ int solve(int uebergebenesBoard[9][9], int zeile, int spalte)
             if (check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 &&  // Prüft, ob der Wert in der aktuellen Zeile, Spalte oder dem 3x3-Block gültig ist
                 check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0) 
             {
-                saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
+                //saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
                 
                 uebergebenesBoard[zeile][spalte] = wert;  // Setzt den Wert in das Board
 
@@ -225,11 +258,9 @@ int solve(int uebergebenesBoard[9][9], int zeile, int spalte)
                 uebergebenesBoard[zeile][spalte] = 0; // Rückgängigmachen der Änderung (Backtracking), wenn der aktuelle Wert nicht zur Lösung führt
             }
         }
-
         return 0;
     }
 }
-
 
 void open_file(FILE **datei, char *dateiname) 
 {
@@ -244,7 +275,6 @@ void open_file(FILE **datei, char *dateiname)
         printf("Datei %s konnte geoeffnet werden.\n", dateiname);
     }
 }
-
 
 void load_file(FILE *datei, int uebergebenesBoard[9][9])
 {
@@ -276,7 +306,6 @@ void load_file(FILE *datei, int uebergebenesBoard[9][9])
     printf("\n"); 
 }
 
-
 void close_file(FILE *datei, char *dateiname)
 {
     
@@ -290,42 +319,8 @@ void close_file(FILE *datei, char *dateiname)
     }
 }
 
-
-
-
-#define MAX_UNDO 100 // Maximale Anzahl der Zustände, die gespeichert werden können
-typedef struct 
+void undo(int uebergebenesBoard[9][9]) 
 {
-    int board[9][9]; // Zustand des Sudoku-Boards
-} BoardState;
-
-BoardState undoStack[MAX_UNDO]; // Stack zur Speicherung von Zuständen
-int undoIndex = -1; // Last-in-first-out, Zeiger auf die aktuelle Position im Stack
-
-void saveBoardState(int uebergebenesBoard[9][9]) 
-{
-  
-    if (undoIndex < MAX_UNDO - 1)   // Überprüft, ob der Undo-Stack noch Platz hat (maximale Anzahl an Undo-Schritten ist MAX_UNDO)
-    {
-        undoIndex++;  // Erhöht den Index für die nächste Speicherstelle im Undo-Stack
-        
-        // Kopiere das aktuelle Sudoku-Board in den Undo-Stack an der Position undoIndex
-        for (int i = 0; i < 9; i++) 
-        {
-            for (int j = 0; j < 9; j++) 
-            {
-                undoStack[undoIndex].board[i][j] = uebergebenesBoard[i][j]; // Speichere jedes Feld des Boards
-            }
-        }
-    } 
-    else 
-    {
-        printf("Undo-Speicher ist voll!\n");
-    }
-}
-
-
-void undo(int uebergebenesBoard[9][9]) {
     if (undoIndex >= 0) // Wenn gespeicherte Zustände vorhanden, bei undoIndex = -1 keine Speicherzustände vorhanden
     {
         for (int i = 0; i < 9; i++) 
@@ -379,34 +374,47 @@ int speichern(int uebergebenesBoard[9][9], char *dateiname)
     return 0; // Rückgabe von 0 signalisiert, dass alles erfolgreich war
 }
 
-int random_board(int uebergebenesBoard[9][9])
+int create_random_board(int uebergebenesBoard[9][9])
 {
     srand(time(NULL));
-    int array[9][9] = {0}; // Initialisiere die Matrix mit Nullen
-    int f = 0;             // Anzahl der gefüllten Zellen
+    erstelleNullBoard(uebergebenesBoard);
+    printBoard(uebergebenesBoard);
+    int f = 0; 
+    int anz_besetze_zellen = 5;
     int random_zeile;
     int random_spalte;
     int random_zahl;
 
-    while (f < 30) 
+    while (f < anz_besetze_zellen) 
     { // Fülle 30 Zellen
         random_zeile = rand() % 9; // Zufällige Zeile (0-8)
         random_spalte = rand() % 9; // Zufällige Spalte (0-8)
         random_zahl = rand() % 9 + 1; // Zufällige Zahl (1-9)
 
         // Überprüfe die Regeln: Zelle muss leer sein und Zahl muss gültig sein
-        if (array[random_zeile][random_spalte] == 0 && 
-            check_double_zeilen_spalten1(array, random_zeile, random_spalte, random_zahl) && 
-            check_double_felder1(array, random_zeile, random_spalte, random_zahl)) 
+        if (uebergebenesBoard[random_zeile][random_spalte] == 0) 
         {
-            array[random_zeile][random_spalte] = random_zahl; // Setze die Zahl
-            f++; // Erhöhe den Zähler der gefüllten Zellen
+            
+            saveBoardState(uebergebenesBoard);
+            uebergebenesBoard[random_zeile][random_spalte] = random_zahl; // Setze die Zahl
+            if(solve(uebergebenesBoard, 0, 0))
+            {
+                undo(uebergebenesBoard);
+                uebergebenesBoard[random_zeile][random_spalte] = random_zahl;
+                f++; // Erhöhe den Zähler der gefüllten Zellen
+            }
+            else
+            {
+                undo(uebergebenesBoard);
+            }             
+
         }
     }
 
     // Ausgabe der gefüllten Matrix
-    printf("Sudoku-Matrix mit 30 zufälligen Zahlen:\n");
-    printBoard(array);
-
+    printf("Sudoku-Matrix mit %d zufälligen Zahlen:\n", anz_besetze_zellen);
+    printBoard(uebergebenesBoard);
     return 0;
 }
+
+
