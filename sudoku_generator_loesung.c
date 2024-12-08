@@ -264,7 +264,7 @@ int generate_sudoku(int uebergebenesBoard[9][9])
     // jetzt löse dieses sudoku mit der Funktion solve (DAS IST JETZT IMMER LÖSBAR!!!!!
     solve(uebergebenesBoard, 0, 0);
     // print_board(uebergebenesBoard);
-    // z.B. Ausgabe sieht die ausgabe so aus:
+    // z.B.  sieht die ausgabe so aus:
     // 3 4 7 6 2 8 9 5 1  
     // 5 1 2 9 4 3 7 6 8  
     // 9 8 6 5 1 7 4 2 3  
@@ -277,7 +277,7 @@ int generate_sudoku(int uebergebenesBoard[9][9])
 
     // jetzt entferne ich k-Elemente vom gelösten sudoku Brett
     int k = 30; // Anzahl der Elemente die entfernt werden sollen
-    while(k > 0)
+    while(k > 0) // solange nicht k-Elemente entfernt worden sind führe aus:
     {
         int random_zeile = rand() % 9; // Zufallsgenerator von 0 bis 8
         int random_spalte = rand() % 9; // Zufallsgenerator von 0 bis 8
