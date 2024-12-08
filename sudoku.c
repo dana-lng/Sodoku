@@ -374,47 +374,5 @@ int speichern(int uebergebenesBoard[9][9], char *dateiname)
     return 0; // Rückgabe von 0 signalisiert, dass alles erfolgreich war
 }
 
-int create_random_board(int uebergebenesBoard[9][9])
-{
-    srand(time(NULL));
-    erstelleNullBoard(uebergebenesBoard);
-    printBoard(uebergebenesBoard);
-    int f = 0; 
-    int anz_besetze_zellen = 5;
-    int random_zeile;
-    int random_spalte;
-    int random_zahl;
-
-    while (f < anz_besetze_zellen) 
-    { // Fülle 30 Zellen
-        random_zeile = rand() % 9; // Zufällige Zeile (0-8)
-        random_spalte = rand() % 9; // Zufällige Spalte (0-8)
-        random_zahl = rand() % 9 + 1; // Zufällige Zahl (1-9)
-
-        // Überprüfe die Regeln: Zelle muss leer sein und Zahl muss gültig sein
-        if (uebergebenesBoard[random_zeile][random_spalte] == 0) 
-        {
-            
-            saveBoardState(uebergebenesBoard);
-            uebergebenesBoard[random_zeile][random_spalte] = random_zahl; // Setze die Zahl
-            if(solve(uebergebenesBoard, 0, 0))
-            {
-                undo(uebergebenesBoard);
-                uebergebenesBoard[random_zeile][random_spalte] = random_zahl;
-                f++; // Erhöhe den Zähler der gefüllten Zellen
-            }
-            else
-            {
-                undo(uebergebenesBoard);
-            }             
-
-        }
-    }
-
-    // Ausgabe der gefüllten Matrix
-    printf("Sudoku-Matrix mit %d zufälligen Zahlen:\n", anz_besetze_zellen);
-    printBoard(uebergebenesBoard);
-    return 0;
-}
 
 

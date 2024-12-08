@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "sudoku.c" // Enthält Funktionen für das Laden, Speichern und Bearbeiten des Sudoku-Boards
+#include "sudoku_generator.c"
 
 int main()
 {
@@ -83,7 +84,7 @@ int main()
                     break;
 
                 case 4:
-                    create_random_board(random_board);
+                    create_random_sudoku(random_board);
                     speichern(random_board, zufall);
                     open_file(&fp, zufall);
                     load_file(fp, board);    
