@@ -246,7 +246,7 @@ int solve(int uebergebenesBoard[9][9], int zeile, int spalte)
             if (check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 &&  // Prüft, ob der Wert in der aktuellen Zeile, Spalte oder dem 3x3-Block gültig ist
                 check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0) 
             {
-                //saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
+                saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
                 
                 uebergebenesBoard[zeile][spalte] = wert;  // Setzt den Wert in das Board
 
