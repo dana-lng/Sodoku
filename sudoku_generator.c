@@ -1,7 +1,39 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <stdbool.h>
 
+#define MAX_UNDO 1000 // Maximale Anzahl der Zustände, die gespeichert werden können
+typedef struct
+{
+    int board[9][9]; // Zustand des Sudoku-Boards
+}BoardState2;
+
+int undoIndex_random = -1; // Last-in-first-out, Zeiger auf die aktuelle Position im Stack
+BoardState2 undoStack2[MAX_UNDO]; // Stack zur Speicherung von Zuständen
+
+void saveBoardState2_random(int uebergebenesBoard[9][9]) 
+{
+  
+    if (undoIndex_random < MAX_UNDO - 1)   // Überprüft, ob der Undo-Stack noch Platz hat (maximale Anzahl an Undo-Schritten ist MAX_UNDO)
+    {
+        undoIndex_random++;  // Erhöht den Index für die nächste Speicherstelle im Undo-Stack
+        
+        // Kopiere das aktuelle Sudoku-Board in den Undo-Stack an der Position undoIndex
+        for (int i = 0; i < 9; i++) 
+        {
+            for (int j = 0; j < 9; j++) 
+            {
+                undoStack[undoIndex_random].board[i][j] = uebergebenesBoard[i][j]; // Speichere jedes Feld des Boards
+            }
+        }
+    } 
+    else 
+    {
+        printf("Undo-Speicher ist voll!\n");
+    }
+}
 
 void erstelle_NullBoard(int uebergebenesBoard[9][9])
 {
@@ -126,24 +158,24 @@ int solve2(int uebergebenesBoard[9][9], int zeile, int spalte)
     }
     else if (spalte == 9)  // Wenn alle Spalten in der aktuellen Zeile abgearbeitet sind, springt zur nächsten Zeile
     {
-        return solve(uebergebenesBoard, zeile + 1, 0); // Wechselt zur nächsten Zeile und starte bei Spalte 0
+        return solve2(uebergebenesBoard, zeile + 1, 0); // Wechselt zur nächsten Zeile und starte bei Spalte 0
     }
     else if (uebergebenesBoard[zeile][spalte] != 0)    // Wenn die aktuelle Zelle bereits einen festen Wert hat, wird übersprungen
     {
-        return solve(uebergebenesBoard, zeile, spalte + 1); 
+        return solve2(uebergebenesBoard, zeile, spalte + 1); 
     }
     else 
     {
         for (wert = 1; wert < 10; wert++) //geht alle Werte von 1 bis 9 durch
         {
-            if (check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 &&  // Prüft, ob der Wert in der aktuellen Zeile, Spalte oder dem 3x3-Block gültig ist
-                check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0) 
+            if (check_double_zeilen_spalten2(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 &&  // Prüft, ob der Wert in der aktuellen Zeile, Spalte oder dem 3x3-Block gültig ist
+                check_double_felder2(uebergebenesBoard, zeile, spalte, wert) == 0) 
             {
-                //saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
+                saveBoardState2_random(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
                 
                 uebergebenesBoard[zeile][spalte] = wert;  // Setzt den Wert in das Board
 
-                if (solve(uebergebenesBoard, zeile, spalte + 1) == 1) // Prüft, ob das Sudoku mit diesem Wert lösbar ist
+                if (solve2(uebergebenesBoard, zeile, spalte + 1) == 1) // Prüft, ob das Sudoku mit diesem Wert lösbar ist
                 {
                     return 1; // Sudoku erfolgreich gelöst 
                 }
@@ -193,7 +225,7 @@ void vertausche_reihenfolge_zahlen_zufaellig(int zahlen[9])
 
 int create_random_sudoku(int uebergebenesBoard[9][9])
 {
-    erstelleNullBoard(uebergebenesBoard);
+    erstelle_NullBoard(uebergebenesBoard);
     srand(time(NULL));
     int zahlen[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int position[9][2] = {{0, 0}, {0, 1}, {0, 2}, 
@@ -224,7 +256,7 @@ int create_random_sudoku(int uebergebenesBoard[9][9])
         uebergebenesBoard[position[i][0] + 6][position[i][1] + 6] = zahlen[i];
     }
 
-    solve(uebergebenesBoard, 0, 0);
+    solve2(uebergebenesBoard, 0, 0);
     system("cls");
 
     int k = 50;
@@ -242,7 +274,7 @@ int create_random_sudoku(int uebergebenesBoard[9][9])
         } 
     }
     printf("Ein zufälliges Sudoku Board mit %d freien Feldern\n", 50);
-    printBoard(uebergebenesBoard);
+    print_Board(uebergebenesBoard);
     return 0;
 }
 
