@@ -88,7 +88,7 @@ int main()
                     speichern(random_board, zufall);
                     open_file(&fp, zufall);
                     load_file(fp, board);    
-                    close_file(fp, zufall);               
+                    close_file(fp, zufall);             
                     break;
             }
             break;

@@ -81,8 +81,8 @@ void printBoard(int uebergebenesBoard[9][9])
 int check_double_felder(int uebergebenesBoard[9][9], int zeile, int spalte, int wert)
 {
     // Durch Division der Zeile und Spalte durch 3 und Multiplikation mit 3 wird die obere linke Ecke des Blocks ermittelt.
-    int feld_start_zeile = (zeile / 3) * 3; 
-    int feld_start_spalte = (spalte / 3) * 3; 
+    int feld_start_zeile = ((zeile - 1) / 3) * 3; 
+    int feld_start_spalte = ((spalte - 1) / 3) * 3; 
 
     for (int i = 0; i < 3; i++) // Iteriert über die 3 Zeilen des Blocks
     {
@@ -244,7 +244,7 @@ int solve(int uebergebenesBoard[9][9], int zeile, int spalte)
         for (wert = 1; wert < 10; wert++) //geht alle Werte von 1 bis 9 durch
         {
             if (check_double_zeilen_spalten(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0 &&  // Prüft, ob der Wert in der aktuellen Zeile, Spalte oder dem 3x3-Block gültig ist
-                check_double_felder(uebergebenesBoard, zeile, spalte, wert) == 0) 
+                check_double_felder(uebergebenesBoard, zeile + 1, spalte + 1, wert) == 0) 
             {
                 saveBoardState(uebergebenesBoard); // Speichert den aktuellen Zustand des Boards (für "Undo"-Funktion
                 
