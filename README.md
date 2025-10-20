@@ -9,7 +9,8 @@ Ziel war es, ein **Sudoku-Spiel** zu entwickeln, das verschiedene Funktionen wie
 ## 🎯 Funktionen
 - Automatische Lösung eines Sudoku-Rätsels  
 - Eigenständige Generierung neuer Sudokus  
-- Verschiedene Spielmodi  
+- Verschiedene Spielmodi
+- Möglichkeit, **Spielzustände rückgängig zu machen** (Undo-Funktion)  
 
 ---
 
