@@ -1,7 +1,7 @@
 # Sudoku – Belegarbeit im Modul Programmierung 1
 
 ## 📘 Projektbeschreibung
-Dieses Projekt entstand im Rahmen der Module **Programmierung 1 und 2**.  
+Dieses Projekt entstand im Rahmen des Moduls **Programmierung 1**.  
 Ziel war es, ein **Sudoku-Spiel** zu entwickeln, das verschiedene Funktionen wie das **Lösen**, **Generieren** und **Spielen** von Sudokus ermöglicht.
 
 ---
